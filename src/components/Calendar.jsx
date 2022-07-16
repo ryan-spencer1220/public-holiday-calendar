@@ -1,14 +1,12 @@
-import { useState, useEffect } from "react";
-import BackButton from "./BackButton";
-import ForwardButton from "./ForwardButton";
+import { useEffect, useState } from "react";
+import CalendarHeader from "./CalendarHeader";
+import Day from "./Day";
 
 const Calendar = () => {
-  const [year, setYear] = useState(2022);
-  const [month, setMonth] = useState(0);
-  const [day, setDay] = useState(31);
-  const [spaces, setSpaces] = useState(0);
-
-  const days = [
+  const [navigate, setNavigate] = useState(0);
+  const [dateDisplay, setDateDisplay] = useState("");
+  const [days, setDays] = useState([]);
+  const daysOfWeek = [
     "Sunday",
     "Monday",
     "Tuesday",
@@ -19,45 +17,64 @@ const Calendar = () => {
   ];
 
   useEffect(() => {
-    const getFirstDayOfMonth = () => {
-      const date = new Date();
+    const date = new Date();
 
-      const day = date.getDate();
-      const month = date.getMonth();
-      const year = date.getFullYear();
+    if (navigate !== 0) {
+      date.setMonth(new Date().getMonth() + navigate);
+      console.log(navigate);
+    }
 
-      // Month + 1 represents "next month", 0 represents the day before the first day of "next month", giving us the last day of the current month
-      const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
 
-      console.log(day);
-      console.log(month);
-      console.log(year);
-    };
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayOfMonth = new Date(year, month, 1);
+    const dateString = firstDayOfMonth.toLocaleDateString("en-us", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
 
-    getFirstDayOfMonth(year, month);
-  }, []);
+    setDateDisplay(
+      `${date.toLocaleDateString("en-us", { month: "long" })} ${year}`
+    );
+
+    const paddingDays = daysOfWeek.indexOf(dateString.split(", ")[0]);
+
+    const daysArray = [];
+
+    for (let i = 1; i <= paddingDays + daysInMonth; i++) {
+      const dayString = `${month + 1}/${i - paddingDays}/${year}`;
+      if (i > paddingDays) {
+        daysArray.push({
+          value: i - paddingDays,
+          date: dayString,
+        });
+      } else {
+        daysArray.push({
+          value: "padding",
+          date: "",
+        });
+      }
+    }
+
+    setDays(daysArray);
+  }, [navigate]);
+
+  const headings = daysOfWeek.map((day) => <div key={day}>{day}</div>);
 
   return (
     <div className="calendar container">
-      <div className="grid grid-cols-3 gap-4 pb-8 justify-items-center">
-        <BackButton />
-        <h2>January</h2>
-        <ForwardButton />
-      </div>
-      <div className="grid grid-cols-7 gap-4 pb-8 ">
-        <div>Sunday</div>
-        <div>Monday</div>
-        <div>Tuesday</div>
-        <div>Wednesday</div>
-        <div>Thursday</div>
-        <div>Friday</div>
-        <div>Saturday</div>
-      </div>
+      <CalendarHeader
+        dateDisplay={dateDisplay}
+        onPrevious={() => setNavigate(navigate - 1)}
+        onNext={() => setNavigate(navigate + 1)}
+      />
+      <div className="grid grid-cols-7 gap-4 pb-8 ">{headings}</div>
       <div className="grid grid-cols-7 gap-4">
-        {Array.from({ length: day }, (_, i) => (
-          <div key={i + 1}>
-            <label>{i + 1}</label>
-          </div>
+        {days.map((date, index) => (
+          <Day key={index} day={date} />
         ))}
       </div>
     </div>
