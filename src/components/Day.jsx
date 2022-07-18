@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 function Day({ day }) {
+  useEffect(() => {}, []);
   const className = `card card-body ${
     day.value === "padding" ? "" : "shadow-md"
   }`;
