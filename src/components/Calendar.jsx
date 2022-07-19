@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import CalendarHeader from "./CalendarHeader";
 import Day from "./Day";
 import daysOfWeek from "../constants";
+import { useFetch } from "./hooks/useFetch";
 
 const Calendar = () => {
+  const { data, isPending, error } = useFetch(
+    "https://date.nager.at/api/v3/PublicHolidays/2022/US"
+  );
   const [navigate, setNavigate] = useState(0);
   const [dateDisplay, setDateDisplay] = useState("");
   const [days, setDays] = useState([]);
-  const [holidays, setHolidays] = useState([]);
+  const [holiday, setHoliday] = useState(null);
 
   useEffect(() => {
     const date = new Date();
@@ -32,14 +35,6 @@ const Calendar = () => {
     setDateDisplay(
       `${date.toLocaleDateString("en-us", { month: "long" })} ${year}`
     );
-
-    const searchHolidays = async () => {
-      axios
-        .get(`https://date.nager.at/api/v3/PublicHolidays/${year}/US`)
-        .then((res) => setHolidays(res.data));
-    };
-
-    searchHolidays();
 
     const paddingDays = daysOfWeek.indexOf(dateString.split(", ")[0]);
 
@@ -65,20 +60,25 @@ const Calendar = () => {
     }
 
     setDays(daysArray);
-
     const holidayDates = [];
-    holidays.forEach((obj) => holidayDates.push(obj.date));
+
+    if (data) {
+      data.forEach((obj) => holidayDates.push(obj.date));
+    }
 
     const dayDates = [];
-    days.forEach((obj) => dayDates.push(obj.date));
+    daysArray.forEach((obj) => dayDates.push(obj.date));
 
-    const found = dayDates.some((r) => holidayDates.includes(r));
-
-    console.log(holidayDates);
+    const foundHoliday = dayDates.find((r) => {
+      if (holidayDates.includes(r)) {
+        return r;
+      }
+    });
+    setHoliday(foundHoliday);
+    console.log(data);
+    console.log(foundHoliday);
     console.log(dayDates);
-    console.log(found);
-
-    // const dayDates = days.forEach((obj) => console.log(obj.date));
+    console.log(holiday);
   }, [navigate]);
 
   return (
@@ -90,7 +90,7 @@ const Calendar = () => {
       />
       <div className="grid grid-cols-7 gap-4">
         {days.map((date, index) => (
-          <Day key={index} day={date} />
+          <Day key={index} day={date} holiday={holiday} />
         ))}
       </div>
     </div>
