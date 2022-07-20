@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 function Day({ day, holiday }) {
   useEffect(() => {
-    // console.log(day, holiday);
+    console.log(holiday.localName);
   }, []);
   const className = `card card-body ${
     day.value === "padding" ? "" : "shadow-md"
@@ -11,7 +11,7 @@ function Day({ day, holiday }) {
   return (
     <div className={className}>
       {day.value === "padding" ? "" : day.value}
-      {holiday === day.value && <p>Holiday!!!!</p>}
+      {holiday.date === day.date && <p>{holiday.localName}</p>}
     </div>
   );
 }
