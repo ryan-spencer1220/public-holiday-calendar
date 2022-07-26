@@ -64,7 +64,7 @@ const Calendar = () => {
     setDays(daysArray);
   }, [navigate]);
 
-  // useEffect calls holiday API sets data variable
+  // useEffect calls holiday API and sets data variables
   useEffect(() => {
     fetch(`https://date.nager.at/api/v3/PublicHolidays/2022/US`)
       .then((response) => response.json())
