@@ -1,18 +1,19 @@
-import React, { useEffect } from "react";
-
-function Day({ day, holiday }) {
-  useEffect(() => {
-    console.log(holiday.localName);
-  }, []);
+function Day({ day, data }) {
   const className = `card card-body ${
     day.value === "padding" ? "" : "shadow-md"
   }`;
 
   return (
-    <div className={className}>
-      {day.value === "padding" ? "" : day.value}
-      {holiday.date === day.date && <p>{holiday.localName}</p>}
-    </div>
+    data && (
+      <div className={className}>
+        {day.value === "padding" ? "" : day.value}
+        {data.map((obj) => {
+          if (obj.date === day.date) {
+            return <p>{obj.localName}</p>;
+          }
+        })}
+      </div>
+    )
   );
 }
 

@@ -2,17 +2,14 @@ import { useEffect, useState } from "react";
 import CalendarHeader from "./CalendarHeader";
 import Day from "./Day";
 import daysOfWeek from "../constants";
-import { useFetch } from "./hooks/useFetch";
 
 const Calendar = () => {
-  const { data, isPending, error } = useFetch(
-    "https://date.nager.at/api/v3/PublicHolidays/2022/US"
-  );
   const [navigate, setNavigate] = useState(0);
   const [dateDisplay, setDateDisplay] = useState("");
   const [days, setDays] = useState([]);
-  const [holiday, setHoliday] = useState(null);
+  const [data, setData] = useState();
 
+  // useEffect creates calendar
   useEffect(() => {
     const date = new Date();
 
@@ -65,29 +62,14 @@ const Calendar = () => {
     }
 
     setDays(daysArray);
-    const holidayDates = [];
-
-    // Checks for API data, if data exists, dates are pushed to a holiday date array
-    if (data) {
-      data.forEach((obj) => holidayDates.push(obj.date));
-    }
-
-    // Isolates date from object and pushes each date to a date array
-    const dayDates = [];
-    daysArray.forEach((obj) => dayDates.push(obj.date));
-
-    // Checks for a match between current days in month and holidays
-    const foundHoliday = dayDates.find((r) => {
-      if (holidayDates.includes(r)) {
-        return r;
-      }
-    });
-
-    const holidayObject = data.find((r) => r.date === foundHoliday);
-
-    setHoliday(holidayObject);
-    console.log(holiday);
   }, [navigate]);
+
+  // useEffect calls holiday API sets data variable
+  useEffect(() => {
+    fetch(`https://date.nager.at/api/v3/PublicHolidays/2022/US`)
+      .then((response) => response.json())
+      .then((response) => setData(response));
+  }, []);
 
   return (
     <div className="calendar container">
@@ -97,9 +79,8 @@ const Calendar = () => {
         onNext={() => setNavigate(navigate + 1)}
       />
       <div className="grid grid-cols-7 gap-4">
-        {days.map((date, index) => (
-          <Day key={index} day={date} holiday={holiday} />
-        ))}
+        {data &&
+          days.map((date, index) => <Day key={index} day={date} data={data} />)}
       </div>
     </div>
   );
