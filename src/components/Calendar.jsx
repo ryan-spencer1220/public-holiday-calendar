@@ -60,7 +60,6 @@ const Calendar = () => {
         });
       }
     }
-
     setDays(daysArray);
   }, [navigate]);
 
