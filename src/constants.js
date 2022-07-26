@@ -1,4 +1,4 @@
-const daysOfWeek = [
+export const daysOfWeek = [
   "Sunday",
   "Monday",
   "Tuesday",
@@ -8,4 +8,4 @@ const daysOfWeek = [
   "Saturday",
 ];
 
-export default daysOfWeek;
+export const abbreviatedDaysOfWeek = ["U", "M", "T", "W", "R", "F", "S"];

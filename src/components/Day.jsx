@@ -1,6 +1,8 @@
+import { BsCircleFill } from "react-icons/bs";
+
 function Day({ day, data }) {
-  const className = `card card-body ${
-    day.value === "padding" ? "" : "shadow-md"
+  const className = `md:card md:card-body ${
+    day.value === "padding" ? "" : "shadow-md card-title"
   }`;
 
   return (
@@ -9,7 +11,12 @@ function Day({ day, data }) {
         {day.value === "padding" ? "" : day.value}
         {data.map((obj) => {
           if (obj.date === day.date) {
-            return <p>{obj.localName}</p>;
+            return (
+              <>
+                <p className="text-xs holiday">{obj.localName}</p>
+                <BsCircleFill size={14} className="holiday-circle" />
+              </>
+            );
           }
         })}
       </div>

@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import CalendarHeader from "./CalendarHeader";
 import Day from "./Day";
-import daysOfWeek from "../constants";
+import { daysOfWeek } from "../constants";
 
 const Calendar = () => {
   const [navigate, setNavigate] = useState(0);
   const [dateDisplay, setDateDisplay] = useState("");
   const [days, setDays] = useState([]);
   const [data, setData] = useState();
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
   // useEffect creates calendar
   useEffect(() => {
@@ -20,6 +21,7 @@ const Calendar = () => {
 
     const month = date.getMonth();
     const year = date.getFullYear();
+    setCurrentYear(year);
 
     // Represents total days in the current month
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -66,10 +68,14 @@ const Calendar = () => {
 
   // useEffect calls holiday API sets data variable
   useEffect(() => {
-    fetch(`https://date.nager.at/api/v3/PublicHolidays/2022/US`)
+    fetch(`https://date.nager.at/api/v3/PublicHolidays/${currentYear}/US`)
       .then((response) => response.json())
       .then((response) => setData(response));
-  }, []);
+
+    console.log(
+      `https://date.nager.at/api/v3/PublicHolidays/${currentYear}/US`
+    );
+  }, [currentYear]);
 
   return (
     <div className="calendar container">
