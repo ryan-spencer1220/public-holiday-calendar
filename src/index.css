@@ -99,12 +99,6 @@ h3 {
   transform: scale(0.98);
 }
 
-footer {
-  position: sticky;
-  top: 95vh;
-  text-align: center;
-}
-
 .loadingSpinnerContainer {
   position: fixed;
   top: 0;
