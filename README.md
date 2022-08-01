@@ -18,7 +18,7 @@
 
 ## Description
 
-This web application designed to function as a monthly calendar featuring major US holidays. Holidays are pulled in from the Nager.Date [Public Holiday API](https://date.nager.at/Api). Users can navigate back or forward to select different months with correct days, padding days, and holidays populated on each render.
+Web application designed to function as a monthly calendar featuring major US holidays. Holidays are pulled in from the Nager.Date [Public Holiday API](https://date.nager.at/Api). Users can navigate back or forward to select different months with correct days, padding days, and holidays populated on each render.
 
 <img width="1002" alt="Screen Shot 2022-08-01 at 9 17 24 AM" src="https://user-images.githubusercontent.com/86761275/182196952-1d254139-8efb-4532-9555-ef236e89ea06.png">
 
