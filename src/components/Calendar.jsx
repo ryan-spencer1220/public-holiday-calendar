@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
 import CalendarHeader from "./CalendarHeader";
 import Day from "./Day";
+import { useEffect, useState } from "react";
 import { daysOfWeek } from "../constants";
+import { toast } from "react-toastify";
 
 const Calendar = () => {
   const [navigateMonth, setNavigateMonth] = useState(0);
@@ -70,10 +71,21 @@ const Calendar = () => {
   }, [navigateMonth]);
 
   useEffect(() => {
-    fetch(`https://date.nager.at/api/v3/PublicHolidays/${currentYear}/US`)
-      .then((response) => response.json())
-      .then((response) => setHolidayData(response));
-  }, [currentYear]);
+    const fetchData = async () => {
+      await fetch(
+        `https://date.nager.at/api/v3/PublicHolidays/${currentYear}/US`
+      )
+        .then((response) => response.json())
+        .then((response) => setHolidayData(response));
+    };
+
+    fetchData().catch(() => {
+      if (!holidayData) {
+        console.log(holidayData);
+        toast.error("OOPS!!");
+      }
+    });
+  }, [currentYear, holidayData]);
 
   return (
     <div className="calendar container p-4 flex-grow">
